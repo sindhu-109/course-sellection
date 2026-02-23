@@ -1,0 +1,254 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap");
+
+:root {
+  --color-primary: #4f46e5;
+  --color-primary-hover: #4338ca;
+  --color-soft-purple: #6366f1;
+  --color-soft-cyan: #06b6d4;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-sidebar: #1f0372;
+  --color-sidebar-hover: #1f2937;
+  --color-background: #f9fafb;
+  --color-card: #ffffff;
+  --color-border: #e5e7eb;
+  --color-text-main: #111827;
+  --color-text-soft: #64748b;
+  --color-danger: #ef4444;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-text-main);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  color: var(--color-text-main);
+}
+
+p {
+  color: var(--color-text-soft);
+}
+
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+  background: var(--color-background);
+}
+
+.app-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-container {
+  padding: 24px;
+}
+
+.sidebar {
+  background: var(--color-sidebar);
+  color: #e5e7eb;
+  width: 240px;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.sidebar-title {
+  margin-bottom: 24px;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-card);
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sidebar-link {
+  display: block;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 2px;
+  color: #e5e7eb;
+  text-decoration: none;
+  transition: 0.2s ease;
+}
+
+.sidebar-link:hover,
+.sidebar-link.active {
+  background: var(--color-sidebar-hover);
+  color: #ffffff;
+}
+
+.sidebar-logout {
+  margin-top: 10px;
+  text-align: left;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: #e5e7eb;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.sidebar-logout:hover {
+  background: var(--color-sidebar-hover);
+  color: #ffffff;
+}
+
+.topbar {
+  background: var(--color-card);
+  padding: 15px 24px;
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card {
+  background: var(--color-card);
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid var(--color-border);
+}
+
+.btn-primary,
+.btn-success,
+.btn-danger,
+.btn-muted,
+.btn-info {
+  border: none;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-weight: 500;
+  transition: 0.2s ease;
+  color: var(--color-card);
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #4338ca, #4f46e5);
+}
+
+.btn-success {
+  background: var(--color-success);
+}
+
+.btn-success:hover {
+  filter: brightness(0.94);
+  transform: translateY(-1px);
+}
+
+.btn-danger {
+  background: var(--color-danger);
+}
+
+.btn-danger:hover {
+  filter: brightness(0.94);
+  transform: translateY(-1px);
+}
+
+.btn-info {
+  background: var(--color-soft-cyan);
+}
+
+.btn-info:hover {
+  filter: brightness(0.94);
+  transform: translateY(-1px);
+}
+
+.btn-muted {
+  background: var(--color-text-soft);
+}
+
+.btn-muted:hover {
+  filter: brightness(0.94);
+}
+
+table {
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border: 1px solid var(--color-border) !important;
+}
+
+input,
+select {
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  outline: none;
+}
+
+input:focus,
+select:focus {
+  border-color: var(--color-primary);
+}
+
+.alert-box {
+  background: var(--color-background);
+  border-left: 5px solid var(--color-warning);
+  padding: 14px;
+  border-radius: 8px;
+}
+
+.alert-warning {
+  background: #fffbeb;
+  border-left: 4px solid var(--color-warning);
+  padding: 14px;
+  border-radius: 8px;
+}
+
+.alert-danger {
+  background: #fef2f2;
+  border-left: 4px solid var(--color-danger);
+  padding: 14px;
+  border-radius: 8px;
+}
+
+.color-danger {
+  color: var(--color-danger);
+  font-weight: 600;
+}
+
+.stat-card {
+  background: var(--color-card);
+  border-radius: 14px;
+  padding: 20px;
+  border: 1px solid var(--color-border);
+  border-top: 4px solid;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.border-blue {
+  border-color: #4f46e5;
+}
+
+.border-cyan {
+  border-color: #06b6d4;
+}
+
+.border-green {
+  border-color: #10b981;
+}
