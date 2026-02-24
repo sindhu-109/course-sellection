@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
+import toast from "react-hot-toast";
 import AdminLayout from "../../layout/AdminLayout";
+import SkeletonCard from "../../components/SkeletonCard";
 import {
 	getRegistrationsWithDetails,
 	initializeStorage,
@@ -7,7 +9,7 @@ import {
 } from "../../services/storage";
 
 export default function Registrations() {
-	const [isLoading, setIsLoading] = useState(true);
+	const [loading, setLoading] = useState(true);
 	const [registrationRequests, setRegistrationRequests] = useState([]);
 
 	const pendingRequests = useMemo(
@@ -18,35 +20,45 @@ export default function Registrations() {
 	const updateRequestStatus = (requestId, status) => {
 		updateRegistrationStatus(requestId, status);
 		setRegistrationRequests(getRegistrationsWithDetails());
+		toast.success(`Request ${status.toLowerCase()} successfully`);
 	};
 
 	useEffect(() => {
-		setIsLoading(true);
-		initializeStorage();
-		setRegistrationRequests(getRegistrationsWithDetails());
-		setIsLoading(false);
+		const fetchData = async () => {
+			setLoading(true);
+			initializeStorage();
+			setRegistrationRequests(getRegistrationsWithDetails());
+			setLoading(false);
+		};
+
+		fetchData();
 	}, []);
+
+	if (loading) {
+		return (
+			<AdminLayout>
+				<SkeletonCard />
+				<SkeletonCard />
+				<SkeletonCard />
+			</AdminLayout>
+		);
+	}
+
+	if (pendingRequests.length === 0) {
+		return (
+			<AdminLayout>
+				<h1>Registration Management</h1>
+				<div className="emptyState">No courses added yet</div>
+			</AdminLayout>
+		);
+	}
 
 	return (
 		<AdminLayout>
 			<h1>Registration Management</h1>
 			<h3 style={{ marginTop: "16px" }}>Pending Requests</h3>
 
-			{isLoading && (
-				<div style={{ marginTop: "12px", display: "grid", gap: "10px" }}>
-					<div className="skeleton" style={{ height: "68px" }} />
-					<div className="skeleton" style={{ height: "68px" }} />
-				</div>
-			)}
-
-			{!isLoading && pendingRequests.length === 0 && (
-				<div className="empty-state" style={{ marginTop: "12px" }}>
-					<h3>🔔 No pending requests</h3>
-					<p>New registrations will appear here for approval.</p>
-				</div>
-			)}
-
-			{!isLoading && pendingRequests.length > 0 && <div style={{ marginTop: "12px" }}>
+			<div style={{ marginTop: "12px" }}>
 				<h3>Registration Requests</h3>
 				<div className="card" style={{ marginTop: "10px", padding: "0" }}>
 				<table
@@ -96,7 +108,7 @@ export default function Registrations() {
 					</tbody>
 				</table>
 				</div>
-			</div>}
+			</div>
 		</AdminLayout>
 	);
 }

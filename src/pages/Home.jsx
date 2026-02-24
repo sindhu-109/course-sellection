@@ -1,6 +1,11 @@
 import { Link } from "react-router-dom";
+import { BookOpen, LayoutDashboard, ShieldCheck } from "lucide-react";
+import { getRole } from "../services/storage";
 
 function Home() {
+  const role = getRole();
+  const dashboardPath = role === "admin" ? "/admin/dashboard" : role === "student" ? "/user/dashboard" : "/login";
+
   return (
     <div className="home-page">
       <header className="landing-navbar">
@@ -17,105 +22,37 @@ function Home() {
       </header>
 
       <main className="landing-main">
-        <section className="landing-section landing-hero">
-          <h1>Build Your Perfect Course Schedule</h1>
+        <section className="hero home-hero card">
+          <h1>Smart Course Management Platform</h1>
           <p>
-            Select courses, avoid conflicts, and manage your semester easily.
+            Select courses, manage schedules, and track academic progress with a
+            powerful dashboard.
           </p>
-          <div className="landing-actions">
-            <Link to="/signup" className="btn-primary home-link-btn">
-              Get Started
-            </Link>
-            <Link to="/user/browse-courses" className="btn-muted home-link-btn">
-              View Courses
-            </Link>
-          </div>
-        </section>
-
-        <section className="landing-section">
-          <h2 className="section-title">Features</h2>
-          <div className="landing-grid four-col">
-            <article className="card landing-card">
-              <h4>📚 Smart Course Selection</h4>
-              <p>Find and choose courses quickly with a simple, guided flow.</p>
-            </article>
-            <article className="card landing-card">
-              <h4>⚠ Schedule Conflict Detection</h4>
-              <p>Get instant alerts when selected courses overlap in timing.</p>
-            </article>
-            <article className="card landing-card">
-              <h4>👨‍💻 Admin Management Panel</h4>
-              <p>Manage users, courses, and registration operations in one place.</p>
-            </article>
-            <article className="card landing-card">
-              <h4>✅ Real-Time Registration</h4>
-              <p>Track and update registration status without delays.</p>
-            </article>
-          </div>
-        </section>
-
-        <section className="landing-section">
-          <h2 className="section-title">Role Overview</h2>
-          <div className="landing-grid two-col">
-            <article className="card landing-card">
-              <h4>👨‍💼 Admin Panel</h4>
-              <ul className="landing-list">
-                <li>Manage Courses</li>
-                <li>Approve Registrations</li>
-                <li>Resolve Conflicts</li>
-              </ul>
-            </article>
-            <article className="card landing-card">
-              <h4>👩‍🎓 Student Panel</h4>
-              <ul className="landing-list">
-                <li>Browse Courses</li>
-                <li>Build Schedule</li>
-                <li>Track Registrations</li>
-              </ul>
-            </article>
-          </div>
-        </section>
-
-        <section className="landing-section">
-          <h2 className="section-title">How It Works</h2>
-          <div className="landing-grid three-col">
-            <article className="card landing-card step-card">
-              <h4>1️⃣ Sign Up / Login</h4>
-            </article>
-            <article className="card landing-card step-card">
-              <h4>2️⃣ Select Courses</h4>
-            </article>
-            <article className="card landing-card step-card">
-              <h4>3️⃣ Generate Schedule</h4>
-            </article>
-          </div>
-        </section>
-
-        <section className="landing-section">
-          <h2 className="section-title">Course Preview</h2>
-          <div className="landing-grid three-col">
-            <article className="card landing-card">
-              <h4>Data Structures</h4>
-            </article>
-            <article className="card landing-card">
-              <h4>Operating Systems</h4>
-            </article>
-            <article className="card landing-card">
-              <h4>Computer Networks</h4>
-            </article>
-          </div>
-          <div className="landing-actions">
-            <Link to="/user/browse-courses" className="btn-info home-link-btn">
-              View All Courses
-            </Link>
-          </div>
-        </section>
-
-        <section className="landing-section landing-cta card">
-          <h2 className="section-title">Ready to build your schedule?</h2>
-          <Link to="/signup" className="btn-primary home-link-btn">
-            Signup Now
+          <Link to={dashboardPath} className="btn-primary home-link-btn primaryBtn">
+            Go to Dashboard
           </Link>
+        </section>
+
+        <section className="actionGrid">
+          <Link to="/user/browse-courses" className="home-action-card card">
+            <BookOpen size={24} className="card-icon" />
+            <h3>Select Courses</h3>
+            <p>Browse and add courses to your schedule.</p>
+          </Link>
+
+          <Link to={dashboardPath} className="home-action-card card">
+            <LayoutDashboard size={24} className="card-icon" />
+            <h3>View Dashboard</h3>
+            <p>See your selected courses and progress.</p>
+          </Link>
+
+          {role === "admin" && (
+            <Link to="/admin/manage-users" className="home-action-card card">
+              <ShieldCheck size={24} className="card-icon" />
+              <h3>Manage Users (Admin)</h3>
+              <p>Admin tools for course and user control.</p>
+            </Link>
+          )}
         </section>
       </main>
 

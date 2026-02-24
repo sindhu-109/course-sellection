@@ -15,7 +15,7 @@ export default function MainLayout({ children }) {
         <Navbar />
 
         {/* PAGE CONTENT */}
-        <div style={{ padding: "25px" }}>
+        <div style={{ padding: "30px" }}>
           {children}
         </div>
 

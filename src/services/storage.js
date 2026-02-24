@@ -28,6 +28,18 @@ const writeJson = (key, value) => {
   localStorage.setItem(key, JSON.stringify(value));
 };
 
+const normalizeRoleValue = (role) => {
+  if (role === "admin") {
+    return "admin";
+  }
+
+  if (role === "student" || role === "user") {
+    return "student";
+  }
+
+  return null;
+};
+
 const normalizeUser = (user) => ({
   id: user.id ?? Date.now(),
   name: user.name ?? "",
@@ -269,6 +281,8 @@ export const authenticateUser = (email, password) => {
 };
 
 export const getCurrentUser = () => readJson(STORAGE_KEYS.currentUser, null);
+
+export const getRole = () => normalizeRoleValue(localStorage.getItem("role"));
 
 export const setCurrentUser = (user) => {
   if (!user) {

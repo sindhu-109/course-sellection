@@ -9,12 +9,19 @@ export default function Signup(){
   const [name,setName] = useState("");
   const [email,setEmail] = useState("");
   const [password,setPassword] = useState("");
-  const [role, setRole] = useState("user");
+  const [role, setRole] = useState("student");
+  const [showPass, setShowPass] = useState(false);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   const handleSignup = (e) =>{
     e.preventDefault();
 
     initializeStorage();
+
+    if (!acceptedTerms) {
+      alert("Please agree to Terms & Privacy Policy");
+      return;
+    }
 
     const response = registerUser({
       name: name.trim(),
@@ -34,108 +41,109 @@ export default function Signup(){
   };
 
   return(
-    <div style={{
-      minHeight:"100vh",
-      display:"flex",
-      justifyContent:"center",
-      alignItems:"center",
-      background:"var(--color-background)",
-      padding:"20px"
-    }}>
-      <form
-        onSubmit={handleSignup}
-        style={{
-          background:"var(--color-card)",
-          padding:"40px",
-          borderRadius:"10px",
-          border:"1px solid var(--color-border)",
-          width:"100%",
-          maxWidth:"380px"
-        }}
-      >
-        <h2 style={{ marginBottom:"8px" }}>Create Account</h2>
-        <p style={{ marginTop:0, color:"var(--color-text-soft)", marginBottom:"16px" }}>
-          Sign up to access the course scheduler.
-        </p>
+    <div className="signupPage">
+      <form className="signupCard" onSubmit={handleSignup}>
+        <div className="signupHeader">
+          <div className="logoBox">🎓</div>
+          <h2>Create Account</h2>
+          <p>Join the EduPortal community today</p>
+        </div>
 
-        <input
-          placeholder="Full Name"
-          value={name}
-          onChange={(e)=>setName(e.target.value)}
-          required
-          style={{
-            width:"100%",
-            padding:"10px",
-            marginTop:"10px",
-            border:"1px solid var(--color-border)",
-            borderRadius:"6px",
-            boxSizing:"border-box"
-          }}
-        />
+        <div className="roleSelect">
+          <div
+            className={`roleCard ${role === "student" ? "active" : ""}`}
+            role="button"
+            tabIndex={0}
+            onClick={() => setRole("student")}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                setRole("student");
+              }
+            }}
+          >
+            <h4>Student</h4>
+            <p>Access courses & track progress</p>
+          </div>
 
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e)=>setEmail(e.target.value)}
-          required
-          style={{
-            width:"100%",
-            padding:"10px",
-            marginTop:"10px",
-            border:"1px solid var(--color-border)",
-            borderRadius:"6px",
-            boxSizing:"border-box"
-          }}
-        />
+          <div
+            className={`roleCard ${role === "admin" ? "active" : ""}`}
+            role="button"
+            tabIndex={0}
+            onClick={() => setRole("admin")}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                setRole("admin");
+              }
+            }}
+          >
+            <h4>Admin</h4>
+            <p>Manage institution & users</p>
+          </div>
+        </div>
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e)=>setPassword(e.target.value)}
-          required
-          style={{
-            width:"100%",
-            padding:"10px",
-            marginTop:"10px",
-            border:"1px solid var(--color-border)",
-            borderRadius:"6px",
-            boxSizing:"border-box"
-          }}
-        />
+        <div className="inputGroup">
+          <label htmlFor="signup-name">Full Name</label>
+          <input
+            id="signup-name"
+            aria-label="Full name"
+            placeholder="Enter your full name"
+            value={name}
+            onChange={(e)=>setName(e.target.value)}
+            required
+          />
+        </div>
 
-        <select
-          value={role}
-          onChange={(e) => setRole(e.target.value)}
-          style={{
-            width:"100%",
-            padding:"10px",
-            marginTop:"10px",
-            border:"1px solid var(--color-border)",
-            borderRadius:"6px",
-            boxSizing:"border-box"
-          }}
-        >
-          <option value="user">User</option>
-          <option value="admin">Admin</option>
-        </select>
+        <div className="inputGroup">
+          <label htmlFor="signup-email">Email Address</label>
+          <input
+            id="signup-email"
+            aria-label="Email address"
+            type="email"
+            placeholder="example@eduportal.com"
+            value={email}
+            onChange={(e)=>setEmail(e.target.value)}
+            required
+          />
+        </div>
 
-        <button
-          type="submit"
-          className="btn-primary"
-          style={{
-            width:"100%",
-            marginTop:"15px",
-            padding:"10px",
-            borderRadius:"6px",
-            cursor:"pointer"
-          }}
-        >
+        <div className="inputGroup">
+          <label htmlFor="signup-password">Password</label>
+          <div className="passwordWrap">
+            <input
+              id="signup-password"
+              aria-label="Password"
+              type={showPass ? "text" : "password"}
+              placeholder="Min. 8 characters"
+              value={password}
+              onChange={(e)=>setPassword(e.target.value)}
+              required
+            />
+            <span
+              role="button"
+              tabIndex={0}
+              aria-label={showPass ? "Hide password" : "Show password"}
+              onClick={()=>setShowPass(!showPass)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  setShowPass(!showPass);
+                }
+              }}
+            >
+              👁
+            </span>
+          </div>
+        </div>
+
+        <label className="termsRow">
+          <input type="checkbox" checked={acceptedTerms} onChange={(e) => setAcceptedTerms(e.target.checked)} />
+          <span>I agree to Terms & Privacy Policy</span>
+        </label>
+
+        <button type="submit" className="btn-primary fullBtn">
           Create Account
         </button>
 
-        <p style={{marginTop:"12px", marginBottom:0}}>
+        <p style={{marginTop:"12px", marginBottom:0, textAlign: "center"}}>
           Already have an account? <Link to="/login">Login</Link>
         </p>
       </form>

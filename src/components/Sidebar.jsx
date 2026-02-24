@@ -5,36 +5,39 @@ import {
   Calendar,
   ClipboardList,
   LayoutDashboard,
-  Shield,
+  UserCircle2,
   Users,
 } from "lucide-react";
+import { getRole } from "../services/storage";
 
-export default function Sidebar({ role }) {
+export default function Sidebar({ role, isMobileOpen = false, onClose }) {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const storedRole = localStorage.getItem("role");
-  const resolvedRole = role || storedRole || (location.pathname.startsWith("/admin") ? "admin" : "user");
+  const resolvedRole = role || getRole() || (location.pathname.startsWith("/admin") ? "admin" : "student");
   const isAdmin = resolvedRole === "admin";
 
   const adminItems = [
-    { label: "Dashboard", to: "/admin/dashboard", icon: LayoutDashboard },
-    { label: "Manage Courses", to: "/admin/manage-courses", icon: BookOpen },
+    { label: "Admin Dashboard", to: "/admin/dashboard", icon: LayoutDashboard },
     { label: "Manage Users", to: "/admin/manage-users", icon: Users },
-    { label: "Registrations", to: "/admin/registrations", icon: ClipboardList },
+    { label: "Manage Courses", to: "/admin/manage-courses", icon: BookOpen },
+    { label: "Analytics", to: "/admin/registrations", icon: ClipboardList },
     { label: "Conflict Resolver", to: "/admin/conflict-resolver", icon: AlertTriangle },
   ];
 
-  const userItems = [
-    { label: "Dashboard", to: "/user/dashboard", icon: LayoutDashboard },
+  const studentItems = [
+    { label: "My Courses", to: "/user/dashboard", icon: LayoutDashboard },
     { label: "Browse Courses", to: "/user/browse-courses", icon: BookOpen },
     { label: "My Schedule", to: "/user/schedule", icon: Calendar },
-    { label: "My Registrations", to: "/user/my-registrations", icon: Shield },
+    { label: "Profile", to: "/user/my-registrations", icon: UserCircle2 },
   ];
 
-  const menuItems = isAdmin ? adminItems : userItems;
+  const menuItems = isAdmin ? adminItems : studentItems;
 
   const handleLogout = () => {
+    if (onClose) {
+      onClose();
+    }
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("role");
     localStorage.removeItem("currentUser");
@@ -42,7 +45,13 @@ export default function Sidebar({ role }) {
   };
 
   return (
-    <div className="sidebar">
+    <>
+      <div
+        className={`sidebar-overlay${isMobileOpen ? " visible" : ""}`}
+        onClick={onClose}
+      />
+
+      <div className={`sidebar${isMobileOpen ? " mobile-open" : ""}`}>
       <h2 className="sidebar-title">Course Scheduler</h2>
 
       <div className="sidebar-nav">
@@ -51,6 +60,8 @@ export default function Sidebar({ role }) {
             key={item.label}
             to={item.to}
             className={({ isActive }) => `sidebar-link${isActive ? " active" : ""}`}
+            onClick={onClose}
+            tabIndex={0}
           >
             <item.icon size={16} style={{ marginRight: "8px" }} />
             {item.label}
@@ -64,6 +75,7 @@ export default function Sidebar({ role }) {
           Logout
         </button>
       </div>
-    </div>
+      </div>
+    </>
   );
 }

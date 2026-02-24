@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { BookOpen, Clock3, UserCircle2 } from "lucide-react";
+import toast from "react-hot-toast";
 import UserLayout from "../../layout/UserLayout";
+import EmptyState from "../../components/EmptyState";
+import SkeletonCard from "../../components/SkeletonCard";
 import {
 	createRegistration,
 	getCourses,
@@ -11,7 +14,7 @@ import {
 
 export default function BrowseCourses() {
 	const [searchText, setSearchText] = useState("");
-	const [isLoading, setIsLoading] = useState(true);
+	const [loading, setLoading] = useState(true);
 	const [courses, setCourses] = useState([]);
 	const [registrations, setRegistrations] = useState([]);
 
@@ -41,7 +44,7 @@ export default function BrowseCourses() {
 
 	const handleEnroll = (courseId) => {
 		if (!currentUser?.email) {
-			alert("Please login again.");
+			toast.error("Please login again.");
 			return;
 		}
 
@@ -51,23 +54,46 @@ export default function BrowseCourses() {
 		});
 
 		if (!response.ok) {
-			alert(response.message);
+			toast.error(response.message);
 			return;
 		}
 
 		setRegistrations(getUserRegistrationsWithDetails(currentUser.email));
-		alert("Registration request submitted for admin approval.");
+		toast.success("Registration request submitted for admin approval.");
 	};
 
 	useEffect(() => {
-		setIsLoading(true);
-		initializeStorage();
-		setCourses(getCourses());
-		if (currentUser?.email) {
-			setRegistrations(getUserRegistrationsWithDetails(currentUser.email));
-		}
-		setIsLoading(false);
+		const fetchData = async () => {
+			setLoading(true);
+			initializeStorage();
+			setCourses(getCourses());
+			if (currentUser?.email) {
+				setRegistrations(getUserRegistrationsWithDetails(currentUser.email));
+			}
+			setLoading(false);
+		};
+
+		fetchData();
 	}, [currentUser?.email]);
+
+	if (loading) {
+		return (
+			<UserLayout>
+				<SkeletonCard />
+				<SkeletonCard />
+				<SkeletonCard />
+			</UserLayout>
+		);
+	}
+
+	if (courses.length === 0) {
+		return (
+			<UserLayout>
+				<h1>Course List</h1>
+				<EmptyState title="No Courses Yet" desc="Start by browsing available courses." />
+			</UserLayout>
+		);
+	}
 
 	return (
 		<UserLayout>
@@ -89,22 +115,11 @@ export default function BrowseCourses() {
 			/>
 
 			<div style={{ marginTop: "18px", display: "grid", gap: "12px" }}>
-				{isLoading && (
-					<>
-						<div className="skeleton" style={{ height: "120px" }} />
-						<div className="skeleton" style={{ height: "120px" }} />
-						<div className="skeleton" style={{ height: "120px" }} />
-					</>
+				{filteredCourses.length === 0 && (
+					<EmptyState title="No Courses Found" desc="Try a different keyword to find available courses." />
 				)}
 
-				{!isLoading && filteredCourses.length === 0 && (
-					<div className="empty-state">
-						<h3>📚 No courses found</h3>
-						<p>Try another search or clear filters to view available courses.</p>
-					</div>
-				)}
-
-				{!isLoading && filteredCourses.map((course) => {
+				{filteredCourses.map((course) => {
 					const registrationStatus = registrationByCourseId[course.id];
 					const isDisabled = registrationStatus === "Pending" || registrationStatus === "Approved";
 					const isCoreCourse = course.id % 2 === 0;
@@ -119,12 +134,9 @@ export default function BrowseCourses() {
 					return (
 						<div
 							key={course.id}
-							className="course-card"
+							className="course-card card"
 							style={{
-								border: "1px solid var(--color-border)",
-								borderRadius: "8px",
 								padding: "14px",
-								background: "var(--color-card)",
 							}}
 						>
 							<h3 style={{ margin: "0 0 8px 0", display: "flex", alignItems: "center", gap: "8px" }}>
@@ -158,6 +170,7 @@ export default function BrowseCourses() {
 								onClick={() => handleEnroll(course.id)}
 								disabled={isDisabled}
 								className={isDisabled ? "btn-muted" : "btn-primary"}
+								aria-label={`${buttonText} ${course.courseName}`}
 								style={{
 									padding: "8px 12px",
 									cursor: isDisabled ? "not-allowed" : "pointer",

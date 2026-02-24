@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import UserLayout from "../../layout/UserLayout";
+import EmptyState from "../../components/EmptyState";
 import {
 	getCurrentUser,
 	getScheduleConflicts,
@@ -10,7 +11,7 @@ import {
 
 export default function MySchedule() {
 	const navigate = useNavigate();
-	const [isLoading, setIsLoading] = useState(true);
+	const [loading, setLoading] = useState(true);
 	const [registrations, setRegistrations] = useState([]);
 	const currentUser = getCurrentUser();
 
@@ -26,13 +27,37 @@ export default function MySchedule() {
 	}, [approvedCourses]);
 
 	useEffect(() => {
-		setIsLoading(true);
-		initializeStorage();
-		if (currentUser?.email) {
-			setRegistrations(getUserRegistrationsWithDetails(currentUser.email));
-		}
-		setIsLoading(false);
+		const fetchData = async () => {
+			setLoading(true);
+			initializeStorage();
+			if (currentUser?.email) {
+				setRegistrations(getUserRegistrationsWithDetails(currentUser.email));
+			}
+			setLoading(false);
+		};
+
+		fetchData();
 	}, [currentUser?.email]);
+
+	if (loading) {
+		return (
+			<UserLayout>
+				<div className="spinner">Loading...</div>
+			</UserLayout>
+		);
+	}
+
+	if (approvedCourses.length === 0) {
+		return (
+			<UserLayout>
+				<h1>My Schedule</h1>
+				<EmptyState title="No Schedule Yet" desc="Register for courses to view your weekly plan." />
+				<div style={{ marginTop: "12px" }}>
+					<button className="btn-primary" onClick={() => navigate("/user/browse-courses")}>Browse Courses</button>
+				</div>
+			</UserLayout>
+		);
+	}
 
 	return (
 		<UserLayout>
@@ -40,9 +65,7 @@ export default function MySchedule() {
 
 			<div style={{ marginTop: "12px", marginBottom: "14px" }}>
 				<h3>Conflict Warning</h3>
-				{isLoading ? (
-					<div className="skeleton" style={{ height: "54px", marginTop: "8px" }} />
-				) : conflictWarnings.length === 0 ? (
+				{conflictWarnings.length === 0 ? (
 					<p>No time conflicts detected.</p>
 				) : (
 					<ul style={{ color: "var(--color-danger)" }}>
@@ -55,22 +78,7 @@ export default function MySchedule() {
 
 			<h3>Approved Courses Schedule</h3>
 			<div style={{ marginTop: "10px", display: "grid", gap: "10px" }}>
-				{isLoading && (
-					<>
-						<div className="skeleton" style={{ height: "84px" }} />
-						<div className="skeleton" style={{ height: "84px" }} />
-					</>
-				)}
-
-				{!isLoading && approvedCourses.length === 0 && (
-					<div className="empty-state">
-						<h3>📅 No courses yet</h3>
-						<p>Start building your schedule.</p>
-						<button className="btn-primary" onClick={() => navigate("/user/browse-courses")}>Browse Courses</button>
-					</div>
-				)}
-
-				{!isLoading && approvedCourses.map((course) => (
+				{approvedCourses.map((course) => (
 					<div
 						key={course.id}
 						className="course-card"

@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import toast from "react-hot-toast";
 import AdminLayout from "../../layout/AdminLayout";
+import SkeletonCard from "../../components/SkeletonCard";
+import StatusBanner from "../../components/StatusBanner";
 import {
 	addCourse,
 	deleteCourse,
@@ -12,9 +15,11 @@ import {
 
 export default function ManageCourses() {
 	const [searchParams] = useSearchParams();
+	const [loading, setLoading] = useState(true);
 	const [courses, setCourses] = useState([]);
 	const [showForm, setShowForm] = useState(false);
 	const [editingCourseId, setEditingCourseId] = useState(null);
+	const [statusBanner, setStatusBanner] = useState({ type: "", msg: "" });
 	const [formData, setFormData] = useState({
 		courseName: "",
 		faculty: "",
@@ -40,6 +45,8 @@ export default function ManageCourses() {
 	const handleDelete = (courseId) => {
 		deleteCourse(courseId);
 		setCourses(getCourses());
+		setStatusBanner({ type: "success", msg: "Course deleted successfully!" });
+		toast.success("Course deleted successfully!");
 	};
 
 	const resetForm = () => {
@@ -52,18 +59,25 @@ export default function ManageCourses() {
 		event.preventDefault();
 
 		if (!formData.courseName || !formData.faculty || !formData.time) {
+			setStatusBanner({ type: "error", msg: "Please fill all fields" });
+			toast.error("Please fill all fields");
 			return;
 		}
 
 		if (!parseCourseTimeRange(formData.time)) {
-			alert("Enter time like: Mon 10:00 AM - 11:00 AM");
+			setStatusBanner({ type: "error", msg: "Enter time like: Mon 10:00 AM - 11:00 AM" });
+			toast.error("Enter time like: Mon 10:00 AM - 11:00 AM");
 			return;
 		}
 
 		if (editingCourseId) {
 			updateCourse(editingCourseId, formData);
+			setStatusBanner({ type: "success", msg: "Course updated successfully!" });
+			toast.success("Course updated successfully!");
 		} else {
 			addCourse(formData);
+			setStatusBanner({ type: "success", msg: "Course added successfully!" });
+			toast.success("Course added successfully!");
 		}
 
 		setCourses(getCourses());
@@ -72,8 +86,14 @@ export default function ManageCourses() {
 	};
 
 	useEffect(() => {
-		initializeStorage();
-		setCourses(getCourses());
+		const fetchData = async () => {
+			setLoading(true);
+			initializeStorage();
+			setCourses(getCourses());
+			setLoading(false);
+		};
+
+		fetchData();
 	}, []);
 
 	useEffect(() => {
@@ -90,8 +110,19 @@ export default function ManageCourses() {
 		handleEdit(selectedCourse);
 	}, [courses, searchParams]);
 
+	if (loading) {
+		return (
+			<AdminLayout>
+				<SkeletonCard />
+				<SkeletonCard />
+				<SkeletonCard />
+			</AdminLayout>
+		);
+	}
+
 	return (
 		<AdminLayout>
+			<StatusBanner type={statusBanner.type} msg={statusBanner.msg} />
 			<h1>Admin Course Control Panel</h1>
 
 			<div style={{ marginTop: "20px" }}>
@@ -106,6 +137,7 @@ export default function ManageCourses() {
 			{showForm && (
 				<form
 					onSubmit={handleSubmit}
+					className="card"
 					style={{
 						marginTop: "16px",
 						display: "grid",
@@ -156,54 +188,34 @@ export default function ManageCourses() {
 				</form>
 			)}
 
-			<hr style={{ margin: "20px 0" }} />
-
-			<div className="card">
-				<h3>Course Table</h3>
+			<div style={{ marginTop: "20px" }}>
+				<h3>Course List</h3>
 				{courses.length === 0 && <p>No courses available.</p>}
-			<table
-				style={{
-					width: "100%",
-					borderCollapse: "collapse",
-					background: "var(--color-card)",
-					marginTop: "12px",
-				}}
-			>
-				<thead>
-					<tr>
-						<th style={{ border: "1px solid var(--color-border)", padding: "10px", textAlign: "left" }}>Course Name</th>
-						<th style={{ border: "1px solid var(--color-border)", padding: "10px", textAlign: "left" }}>Faculty</th>
-						<th style={{ border: "1px solid var(--color-border)", padding: "10px", textAlign: "left" }}>Time</th>
-						<th style={{ border: "1px solid var(--color-border)", padding: "10px", textAlign: "left" }}>Edit</th>
-						<th style={{ border: "1px solid var(--color-border)", padding: "10px", textAlign: "left" }}>Delete</th>
-					</tr>
-				</thead>
-				<tbody>
+
+				<div className="statsGrid" style={{ marginTop: "12px" }}>
 					{courses.map((course) => (
-						<tr key={course.id}>
-							<td style={{ border: "1px solid var(--color-border)", padding: "10px" }}>{course.courseName}</td>
-							<td style={{ border: "1px solid var(--color-border)", padding: "10px" }}>{course.faculty}</td>
-							<td style={{ border: "1px solid var(--color-border)", padding: "10px" }}>{course.time}</td>
-							<td style={{ border: "1px solid var(--color-border)", padding: "10px" }}>
+						<div key={course.id} className="card">
+							<h3 style={{ marginTop: 0 }}>{course.courseName}</h3>
+							<p style={{ margin: "8px 0 0 0" }}><strong>Faculty:</strong> {course.faculty}</p>
+							<p style={{ margin: "8px 0 0 0" }}><strong>Time:</strong> {course.time}</p>
+
+							<div style={{ display: "flex", gap: "10px", marginTop: "12px" }}>
 								<button
 									onClick={() => handleEdit(course)}
 									className="btn-info"
 								>
 									Edit Course
 								</button>
-							</td>
-							<td style={{ border: "1px solid var(--color-border)", padding: "10px" }}>
 								<button
 									onClick={() => handleDelete(course.id)}
 									className="btn-danger"
 								>
 									Delete Course
 								</button>
-							</td>
-						</tr>
+							</div>
+						</div>
 					))}
-				</tbody>
-			</table>
+				</div>
 			</div>
 		</AdminLayout>
 	);

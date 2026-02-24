@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
+import toast from "react-hot-toast";
 import AdminLayout from "../../layout/AdminLayout";
+import StatusBanner from "../../components/StatusBanner";
 import {
 	getRegistrationsWithDetails,
 	getUsers,
@@ -8,8 +10,10 @@ import {
 } from "../../services/storage";
 
 export default function ManageUsers() {
+	const [loading, setLoading] = useState(true);
 	const [students, setStudents] = useState([]);
 	const [registrations, setRegistrations] = useState([]);
+	const [statusBanner, setStatusBanner] = useState({ type: "", msg: "" });
 
 	const [selectedSchedule, setSelectedSchedule] = useState(null);
 
@@ -42,6 +46,8 @@ export default function ManageUsers() {
 	const updateStatus = (studentId, status) => {
 		updateUserStatus(studentId, status);
 		setStudents(getUsers());
+		toast.success(`Student ${status.toLowerCase()} successfully`);
+		setStatusBanner({ type: "success", msg: `Student ${status.toLowerCase()} successfully!` });
 	};
 
 	const handleViewSchedule = (student) => {
@@ -49,13 +55,28 @@ export default function ManageUsers() {
 	};
 
 	useEffect(() => {
-		initializeStorage();
-		setStudents(getUsers());
-		setRegistrations(getRegistrationsWithDetails());
+		const fetchData = async () => {
+			setLoading(true);
+			initializeStorage();
+			setStudents(getUsers());
+			setRegistrations(getRegistrationsWithDetails());
+			setLoading(false);
+		};
+
+		fetchData();
 	}, []);
+
+	if (loading) {
+		return (
+			<AdminLayout>
+				<div className="spinner">Loading...</div>
+			</AdminLayout>
+		);
+	}
 
 	return (
 		<AdminLayout>
+			<StatusBanner type={statusBanner.type} msg={statusBanner.msg} />
 			<h1>Admin Manages Students</h1>
 
 			<div style={{ marginTop: "18px" }}>
@@ -88,6 +109,7 @@ export default function ManageUsers() {
 									<button
 										onClick={() => handleViewSchedule(student)}
 										className="btn-primary"
+										aria-label={`View schedule for ${student.name}`}
 										style={{ marginTop: "8px" }}
 									>
 										View Schedules
@@ -99,12 +121,14 @@ export default function ManageUsers() {
 										<button
 											onClick={() => updateStatus(student.id, "Approved")}
 											className="btn-success"
+											aria-label={`Approve ${student.name}`}
 										>
 											Approve
 										</button>
 										<button
 											onClick={() => updateStatus(student.id, "Blocked")}
 											className="btn-danger"
+											aria-label={`Block ${student.name}`}
 										>
 											Block
 										</button>
@@ -123,6 +147,7 @@ export default function ManageUsers() {
 							<button
 								onClick={() => setSelectedSchedule(null)}
 								className="btn-muted"
+								aria-label="Close schedule preview"
 							>
 								Close
 							</button>

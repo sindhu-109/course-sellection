@@ -51,34 +51,24 @@ export default function AdminDashboard() {
 		<AdminLayout>
 			<h1>Admin Dashboard Overview</h1>
 
-			<div style={{ marginTop: "16px" }}>
-				<h3>📊 Stats Cards</h3>
-				<div
-					style={{
-						display: "grid",
-						gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-						gap: "12px",
-						marginTop: "10px",
-					}}
-				>
-					<div className="stat-card border-blue" style={{ padding: "14px" }}>
-						<p style={{ margin: 0, color: "var(--color-text-soft)" }}>Total Courses</p>
-						<h2 style={{ margin: "8px 0 0 0" }}>{totalCoursesCount}</h2>
-					</div>
+			<div className="statsGrid" style={{ marginTop: "16px" }}>
+				<div className="card">
+					<h3 style={{ marginTop: 0 }}>Users Count</h3>
+					<p style={{ margin: "8px 0 0 0", fontSize: "26px", fontWeight: 700 }}>{totalStudentsCount}</p>
+				</div>
 
-					<div className="stat-card border-cyan" style={{ padding: "14px" }}>
-						<p style={{ margin: 0, color: "var(--color-text-soft)" }}>Total Students</p>
-						<h2 style={{ margin: "8px 0 0 0" }}>{totalStudentsCount}</h2>
-					</div>
+				<div className="card">
+					<h3 style={{ marginTop: 0 }}>Courses Count</h3>
+					<p style={{ margin: "8px 0 0 0", fontSize: "26px", fontWeight: 700 }}>{totalCoursesCount}</p>
+				</div>
 
-					<div className="stat-card border-green" style={{ padding: "14px" }}>
-						<p style={{ margin: 0, color: "var(--color-text-soft)" }}>Active Registrations</p>
-						<h2 style={{ margin: "8px 0 0 0" }}>{activeRegistrationsCount}</h2>
-					</div>
+				<div className="card">
+					<h3 style={{ marginTop: 0 }}>Registrations</h3>
+					<p style={{ margin: "8px 0 0 0", fontSize: "26px", fontWeight: 700 }}>{registrations.length}</p>
 				</div>
 			</div>
 
-			<div style={{ marginTop: "18px" }}>
+			<div className="card" style={{ marginTop: "18px" }}>
 				<h3>⚠️ Alerts</h3>
 				<div className={conflictAlertsCount > 0 ? "alert-danger" : "alert-warning"} style={{ marginTop: "10px" }}>
 					<p style={{ margin: 0 }}><strong>Pending Registrations:</strong> {pendingRegistrationsCount}</p>
@@ -88,13 +78,14 @@ export default function AdminDashboard() {
 				</div>
 			</div>
 
-			<div style={{ marginTop: "18px" }}>
+			<div className="card" style={{ marginTop: "18px" }}>
 				<h3>Quick Actions Buttons</h3>
 				<div style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginTop: "10px" }}>
 					{quickActions.map((action) => (
 						<button
 							key={action}
 							className="btn-primary"
+							aria-label={action}
 						>
 							{action}
 						</button>
@@ -102,9 +93,9 @@ export default function AdminDashboard() {
 				</div>
 			</div>
 
-			<div style={{ marginTop: "18px" }}>
+			<div className="card" style={{ marginTop: "18px" }}>
 				<h3>📈 Activity Overview</h3>
-				<div className="card" style={{ marginTop: "10px", padding: "14px" }}>
+				<div style={{ marginTop: "10px" }}>
 					<ul style={{ margin: 0, paddingLeft: "20px" }}>
 						{recentActivities.map((activity) => (
 							<li key={activity} style={{ marginBottom: "6px" }}>
