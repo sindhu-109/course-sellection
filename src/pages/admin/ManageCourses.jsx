@@ -165,26 +165,26 @@ export default function ManageCourses() {
 				style={{
 					width: "100%",
 					borderCollapse: "collapse",
-					background: "#FFFFFF",
+					background: "var(--color-card)",
 					marginTop: "12px",
 				}}
 			>
 				<thead>
 					<tr>
-						<th style={{ border: "1px solid #E5E7EB", padding: "10px", textAlign: "left" }}>Course Name</th>
-						<th style={{ border: "1px solid #E5E7EB", padding: "10px", textAlign: "left" }}>Faculty</th>
-						<th style={{ border: "1px solid #E5E7EB", padding: "10px", textAlign: "left" }}>Time</th>
-						<th style={{ border: "1px solid #E5E7EB", padding: "10px", textAlign: "left" }}>Edit</th>
-						<th style={{ border: "1px solid #E5E7EB", padding: "10px", textAlign: "left" }}>Delete</th>
+						<th style={{ border: "1px solid var(--color-border)", padding: "10px", textAlign: "left" }}>Course Name</th>
+						<th style={{ border: "1px solid var(--color-border)", padding: "10px", textAlign: "left" }}>Faculty</th>
+						<th style={{ border: "1px solid var(--color-border)", padding: "10px", textAlign: "left" }}>Time</th>
+						<th style={{ border: "1px solid var(--color-border)", padding: "10px", textAlign: "left" }}>Edit</th>
+						<th style={{ border: "1px solid var(--color-border)", padding: "10px", textAlign: "left" }}>Delete</th>
 					</tr>
 				</thead>
 				<tbody>
 					{courses.map((course) => (
 						<tr key={course.id}>
-							<td style={{ border: "1px solid #E5E7EB", padding: "10px" }}>{course.courseName}</td>
-							<td style={{ border: "1px solid #E5E7EB", padding: "10px" }}>{course.faculty}</td>
-							<td style={{ border: "1px solid #E5E7EB", padding: "10px" }}>{course.time}</td>
-							<td style={{ border: "1px solid #E5E7EB", padding: "10px" }}>
+							<td style={{ border: "1px solid var(--color-border)", padding: "10px" }}>{course.courseName}</td>
+							<td style={{ border: "1px solid var(--color-border)", padding: "10px" }}>{course.faculty}</td>
+							<td style={{ border: "1px solid var(--color-border)", padding: "10px" }}>{course.time}</td>
+							<td style={{ border: "1px solid var(--color-border)", padding: "10px" }}>
 								<button
 									onClick={() => handleEdit(course)}
 									className="btn-info"
@@ -192,7 +192,7 @@ export default function ManageCourses() {
 									Edit Course
 								</button>
 							</td>
-							<td style={{ border: "1px solid #E5E7EB", padding: "10px" }}>
+							<td style={{ border: "1px solid var(--color-border)", padding: "10px" }}>
 								<button
 									onClick={() => handleDelete(course.id)}
 									className="btn-danger"

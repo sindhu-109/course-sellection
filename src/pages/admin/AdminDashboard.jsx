@@ -62,17 +62,17 @@ export default function AdminDashboard() {
 					}}
 				>
 					<div className="stat-card border-blue" style={{ padding: "14px" }}>
-						<p style={{ margin: 0, color: "#64748B" }}>Total Courses</p>
+						<p style={{ margin: 0, color: "var(--color-text-soft)" }}>Total Courses</p>
 						<h2 style={{ margin: "8px 0 0 0" }}>{totalCoursesCount}</h2>
 					</div>
 
 					<div className="stat-card border-cyan" style={{ padding: "14px" }}>
-						<p style={{ margin: 0, color: "#64748B" }}>Total Students</p>
+						<p style={{ margin: 0, color: "var(--color-text-soft)" }}>Total Students</p>
 						<h2 style={{ margin: "8px 0 0 0" }}>{totalStudentsCount}</h2>
 					</div>
 
 					<div className="stat-card border-green" style={{ padding: "14px" }}>
-						<p style={{ margin: 0, color: "#64748B" }}>Active Registrations</p>
+						<p style={{ margin: 0, color: "var(--color-text-soft)" }}>Active Registrations</p>
 						<h2 style={{ margin: "8px 0 0 0" }}>{activeRegistrationsCount}</h2>
 					</div>
 				</div>
@@ -82,7 +82,7 @@ export default function AdminDashboard() {
 				<h3>⚠️ Alerts</h3>
 				<div className={conflictAlertsCount > 0 ? "alert-danger" : "alert-warning"} style={{ marginTop: "10px" }}>
 					<p style={{ margin: 0 }}><strong>Pending Registrations:</strong> {pendingRegistrationsCount}</p>
-					<p style={{ margin: "8px 0 0 0", color: conflictAlertsCount > 0 ? "#EF4444" : "#10B981" }}>
+					<p style={{ margin: "8px 0 0 0", color: conflictAlertsCount > 0 ? "var(--color-danger)" : "var(--color-success)" }}>
 						<strong>Schedule Conflicts:</strong> {conflictAlertsCount}
 					</p>
 				</div>

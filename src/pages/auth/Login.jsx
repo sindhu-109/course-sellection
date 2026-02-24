@@ -44,14 +44,14 @@ export default function Login() {
       display:"flex",
       justifyContent:"center",
       alignItems:"center",
-      background:"#F8FAFC"
+      background:"var(--color-background)"
     }}>
       <form onSubmit={handleLogin}
         style={{
-          background:"#FFFFFF",
+          background:"var(--color-card)",
           padding:"40px",
           borderRadius:"10px",
-          border:"1px solid #E5E7EB",
+          border:"1px solid var(--color-border)",
           width:"350px"
         }}
       >
@@ -82,13 +82,11 @@ export default function Login() {
         </select>
 
         <button
+          className="btn-primary"
           style={{
             width:"100%",
             marginTop:"15px",
-            background:"#2563EB",
-            color:"#FFFFFF",
             padding:"10px",
-            border:"none",
             borderRadius:"6px"
           }}
         >
@@ -97,7 +95,7 @@ export default function Login() {
 
         <p style={{marginTop:"10px"}}>
           Don't have account? <span
-            style={{color:"#2563EB",cursor:"pointer"}}
+            style={{color:"var(--color-primary)",cursor:"pointer"}}
             onClick={()=>navigate("/signup")}
           >
             Sign Up

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { BookOpen, Clock3, UserCircle2 } from "lucide-react";
 import UserLayout from "../../layout/UserLayout";
 import {
 	createRegistration,
@@ -10,6 +11,7 @@ import {
 
 export default function BrowseCourses() {
 	const [searchText, setSearchText] = useState("");
+	const [isLoading, setIsLoading] = useState(true);
 	const [courses, setCourses] = useState([]);
 	const [registrations, setRegistrations] = useState([]);
 
@@ -58,11 +60,13 @@ export default function BrowseCourses() {
 	};
 
 	useEffect(() => {
+		setIsLoading(true);
 		initializeStorage();
 		setCourses(getCourses());
 		if (currentUser?.email) {
 			setRegistrations(getUserRegistrationsWithDetails(currentUser.email));
 		}
+		setIsLoading(false);
 	}, [currentUser?.email]);
 
 	return (
@@ -79,17 +83,32 @@ export default function BrowseCourses() {
 					padding: "10px",
 					width: "100%",
 					maxWidth: "420px",
-					border: "1px solid #E5E7EB",
+					border: "1px solid var(--color-border)",
 					borderRadius: "6px",
 				}}
 			/>
 
 			<div style={{ marginTop: "18px", display: "grid", gap: "12px" }}>
-				{filteredCourses.length === 0 && <p>No courses found.</p>}
+				{isLoading && (
+					<>
+						<div className="skeleton" style={{ height: "120px" }} />
+						<div className="skeleton" style={{ height: "120px" }} />
+						<div className="skeleton" style={{ height: "120px" }} />
+					</>
+				)}
 
-				{filteredCourses.map((course) => {
+				{!isLoading && filteredCourses.length === 0 && (
+					<div className="empty-state">
+						<h3>📚 No courses found</h3>
+						<p>Try another search or clear filters to view available courses.</p>
+					</div>
+				)}
+
+				{!isLoading && filteredCourses.map((course) => {
 					const registrationStatus = registrationByCourseId[course.id];
 					const isDisabled = registrationStatus === "Pending" || registrationStatus === "Approved";
+					const isCoreCourse = course.id % 2 === 0;
+					const seatsLeft = Math.max(5, 24 - ((course.id * 3) % 17));
 					const buttonText =
 						registrationStatus === "Approved"
 							? "Approved"
@@ -100,18 +119,37 @@ export default function BrowseCourses() {
 					return (
 						<div
 							key={course.id}
+							className="course-card"
 							style={{
-								border: "1px solid #E5E7EB",
+								border: "1px solid var(--color-border)",
 								borderRadius: "8px",
 								padding: "14px",
-								background: "#FFFFFF",
+								background: "var(--color-card)",
 							}}
 						>
-							<h3 style={{ margin: "0 0 8px 0" }}>{course.courseName}</h3>
-							<p style={{ margin: "0 0 6px 0" }}>Faculty: {course.faculty}</p>
-							<p style={{ margin: "0 0 12px 0" }}>Time: {course.time}</p>
+							<h3 style={{ margin: "0 0 8px 0", display: "flex", alignItems: "center", gap: "8px" }}>
+								<BookOpen size={17} />
+								{course.courseName}
+							</h3>
+
+							<div className="tag-row">
+								<span className={`chip ${isCoreCourse ? "chip-core" : "chip-elective"}`}>
+									{isCoreCourse ? "Core" : "Elective"}
+								</span>
+								<span className="chip">{course.time.split("-")[0].trim()}</span>
+							</div>
+
+							<p style={{ margin: "0 0 6px 0", display: "flex", alignItems: "center", gap: "6px" }}>
+								<UserCircle2 size={14} />
+								{course.faculty}
+							</p>
+							<p style={{ margin: "0 0 8px 0", display: "flex", alignItems: "center", gap: "6px" }}>
+								<Clock3 size={14} />
+								{course.time}
+							</p>
+							<p className="seats-text">Seats Left: {seatsLeft}</p>
 							{registrationStatus === "Rejected" && (
-								<p style={{ margin: "0 0 12px 0", color: "#EF4444" }}>
+								<p style={{ margin: "0 0 12px 0", color: "var(--color-danger)" }}>
 									Previous request rejected. You can apply again.
 								</p>
 							)}
@@ -119,12 +157,9 @@ export default function BrowseCourses() {
 							<button
 								onClick={() => handleEnroll(course.id)}
 								disabled={isDisabled}
+								className={isDisabled ? "btn-muted" : "btn-primary"}
 								style={{
 									padding: "8px 12px",
-									background: isDisabled ? "#64748B" : "#2563EB",
-									color: "#FFFFFF",
-									border: "none",
-									borderRadius: "5px",
 									cursor: isDisabled ? "not-allowed" : "pointer",
 								}}
 							>

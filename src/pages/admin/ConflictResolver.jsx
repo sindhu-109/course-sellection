@@ -55,7 +55,7 @@ export default function ConflictResolver() {
 
 			<div style={{ marginTop: "16px" }}>
 				<h3>Time Conflict Alerts</h3>
-				<p style={{ marginTop: "6px", color: "#64748B" }}>
+				<p style={{ marginTop: "6px", color: "var(--color-text-soft)" }}>
 					Active alerts: {activeConflictCount}
 				</p>
 			</div>
@@ -71,10 +71,10 @@ export default function ConflictResolver() {
 						<h4 style={{ margin: "0 0 8px 0" }}>
 							{conflict.student} → {conflict.message}
 						</h4>
-						<p style={{ margin: "0 0 6px 0", color: "#EF4444" }}>
+						<p style={{ margin: "0 0 6px 0", color: "var(--color-danger)" }}>
 							<strong>Time conflict alert:</strong> {conflict.timeAlert || "Time not set"}
 						</p>
-						<p style={{ margin: "0 0 10px 0", color: "#10B981" }}>
+						<p style={{ margin: "0 0 10px 0", color: "var(--color-success)" }}>
 							<strong>Auto suggestion:</strong> {conflict.autoSuggestion}
 						</p>
 

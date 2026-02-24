@@ -39,22 +39,22 @@ export default function Signup(){
       display:"flex",
       justifyContent:"center",
       alignItems:"center",
-      background:"#F8FAFC",
+      background:"var(--color-background)",
       padding:"20px"
     }}>
       <form
         onSubmit={handleSignup}
         style={{
-          background:"#FFFFFF",
+          background:"var(--color-card)",
           padding:"40px",
           borderRadius:"10px",
-          border:"1px solid #E5E7EB",
+          border:"1px solid var(--color-border)",
           width:"100%",
           maxWidth:"380px"
         }}
       >
         <h2 style={{ marginBottom:"8px" }}>Create Account</h2>
-        <p style={{ marginTop:0, color:"#64748B", marginBottom:"16px" }}>
+        <p style={{ marginTop:0, color:"var(--color-text-soft)", marginBottom:"16px" }}>
           Sign up to access the course scheduler.
         </p>
 
@@ -67,7 +67,7 @@ export default function Signup(){
             width:"100%",
             padding:"10px",
             marginTop:"10px",
-            border:"1px solid #E5E7EB",
+            border:"1px solid var(--color-border)",
             borderRadius:"6px",
             boxSizing:"border-box"
           }}
@@ -83,7 +83,7 @@ export default function Signup(){
             width:"100%",
             padding:"10px",
             marginTop:"10px",
-            border:"1px solid #E5E7EB",
+            border:"1px solid var(--color-border)",
             borderRadius:"6px",
             boxSizing:"border-box"
           }}
@@ -99,7 +99,7 @@ export default function Signup(){
             width:"100%",
             padding:"10px",
             marginTop:"10px",
-            border:"1px solid #E5E7EB",
+            border:"1px solid var(--color-border)",
             borderRadius:"6px",
             boxSizing:"border-box"
           }}
@@ -112,7 +112,7 @@ export default function Signup(){
             width:"100%",
             padding:"10px",
             marginTop:"10px",
-            border:"1px solid #E5E7EB",
+            border:"1px solid var(--color-border)",
             borderRadius:"6px",
             boxSizing:"border-box"
           }}
@@ -123,13 +123,11 @@ export default function Signup(){
 
         <button
           type="submit"
+          className="btn-primary"
           style={{
             width:"100%",
             marginTop:"15px",
-            background:"#2563EB",
-            color:"#FFFFFF",
             padding:"10px",
-            border:"none",
             borderRadius:"6px",
             cursor:"pointer"
           }}

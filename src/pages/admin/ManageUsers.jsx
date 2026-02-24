@@ -65,25 +65,25 @@ export default function ManageUsers() {
 					style={{
 						width: "100%",
 						borderCollapse: "collapse",
-						background: "#FFFFFF",
+						background: "var(--color-card)",
 					}}
 				>
 					<thead>
 						<tr>
-							<th style={{ border: "1px solid #E5E7EB", padding: "10px", textAlign: "left" }}>Name</th>
-							<th style={{ border: "1px solid #E5E7EB", padding: "10px", textAlign: "left" }}>Email</th>
-							<th style={{ border: "1px solid #E5E7EB", padding: "10px", textAlign: "left" }}>
+							<th style={{ border: "1px solid var(--color-border)", padding: "10px", textAlign: "left" }}>Name</th>
+							<th style={{ border: "1px solid var(--color-border)", padding: "10px", textAlign: "left" }}>Email</th>
+							<th style={{ border: "1px solid var(--color-border)", padding: "10px", textAlign: "left" }}>
 								Registered Courses
 							</th>
-							<th style={{ border: "1px solid #E5E7EB", padding: "10px", textAlign: "left" }}>Status</th>
+							<th style={{ border: "1px solid var(--color-border)", padding: "10px", textAlign: "left" }}>Status</th>
 						</tr>
 					</thead>
 					<tbody>
 						{studentsWithDetails.map((student) => (
 							<tr key={student.id}>
-								<td style={{ border: "1px solid #E5E7EB", padding: "10px" }}>{student.name}</td>
-								<td style={{ border: "1px solid #E5E7EB", padding: "10px" }}>{student.email}</td>
-								<td style={{ border: "1px solid #E5E7EB", padding: "10px" }}>
+								<td style={{ border: "1px solid var(--color-border)", padding: "10px" }}>{student.name}</td>
+								<td style={{ border: "1px solid var(--color-border)", padding: "10px" }}>{student.email}</td>
+								<td style={{ border: "1px solid var(--color-border)", padding: "10px" }}>
 									<div>{student.registeredCourses.join(", ") || "No courses"}</div>
 									<button
 										onClick={() => handleViewSchedule(student)}
@@ -93,7 +93,7 @@ export default function ManageUsers() {
 										View Schedules
 									</button>
 								</td>
-								<td style={{ border: "1px solid #E5E7EB", padding: "10px" }}>
+								<td style={{ border: "1px solid var(--color-border)", padding: "10px" }}>
 									<div style={{ marginBottom: "8px" }}>{student.status}</div>
 									<div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
 										<button
